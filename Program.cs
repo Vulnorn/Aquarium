@@ -87,7 +87,7 @@ namespace Aquarium
         {
             foreach (Fish fish in _fishes)
             {
-                Console.WriteLine($"Рыба #{fish.Id} - возраст: {fish.Age}");
+                Console.WriteLine($"Рыба #{fish.Name} - возраст: {fish.Age}");
             }
         }
 
@@ -113,13 +113,13 @@ namespace Aquarium
             {
                 ShowFishes();
 
-                Console.WriteLine("Введите ID рыбы которую хотите удалить:");
+                Console.WriteLine("Введите название рыбы которую хотите удалить:");
 
                 if (int.TryParse(Console.ReadLine(), out int index))
                 {
                     foreach (Fish fish in _fishes)
                     {
-                        if (fish.Id == index)
+                        if (fish.Name == index)
                         {
                             _fishes.Remove(fish);
                             return;
@@ -141,7 +141,7 @@ namespace Aquarium
             {
                 if (_fishes[i].IsDead)
                 {
-                    Console.WriteLine($"Удалена рыба с ID: {_fishes[i].Id}. Срок жизни был {_fishes[i].MaxLife}");
+                    Console.WriteLine($"Удалена рыба с ID: {_fishes[i].Name}. Срок жизни был {_fishes[i].MaxLife}");
                     _fishes.RemoveAt(i);
                 }
             }
@@ -159,8 +159,12 @@ namespace Aquarium
 
         private void Create()
         {
-            _aquarium.Add(new Fish());
-            _aquarium.Add(new Fish());
+            _aquarium.Add(new Fish("Скалярия",6));
+            _aquarium.Add(new Fish("Золотая рыбка",5));
+            _aquarium.Add(new Fish("Гурами", 8));
+            _aquarium.Add(new Fish("Макропод", 7));
+            _aquarium.Add(new Fish("Попугай", 10));
+
         }
 
         public List<Fish> GetList()
@@ -172,16 +176,16 @@ namespace Aquarium
     public class Fish
     {
         private const int MinAge = 1;
-        private const int MaxAge = 100;
         private static int s_id = 1;
 
-        public Fish()
+        public Fish(string name,int maxLife)
         {
-            Id = NewId();
-            MaxLife = UserUtils.GenerateRandomNumber(MinAge, MaxAge);
+            Name = name; 
+            MaxLife = maxLife;
+            Age = UserUtils.GenerateRandomNumber(MinAge, maxLife);
         }
 
-        public int Id { get; private set; }
+        public string Name { get; private set; }
         public int Age { get; private set; }
         public int MaxLife { get; private set; }
         public bool IsDead => Age >= MaxLife;
@@ -198,7 +202,7 @@ namespace Aquarium
 
         public Fish Clone()
         {
-            return new Fish();
+            return new Fish(Name,MaxLife);
         }
     }
 
