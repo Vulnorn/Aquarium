@@ -68,8 +68,10 @@ namespace Aquarium
 
                 isOpen = IsOpen();
 
+                Close(isOpen);
                 GrowOldFishes();
                 RemovedDeadFishes();
+                Close(isOpen);
 
                 Console.ReadKey();
                 Console.Clear();
@@ -78,7 +80,16 @@ namespace Aquarium
 
         private bool IsOpen()
         {
-            return _fishes.Count > 0;
+            return _fishes.Count > 1;
+        }
+
+        private void Close (bool isOpen)
+        {
+            if (isOpen == false)
+            {
+                Console.WriteLine($"В Аквариуме закончились рыбки");
+                return;
+            }
         }
 
         private void ShowFishes()
@@ -110,24 +121,17 @@ namespace Aquarium
         }
 
         private void RemoveFish()
-        {
-            if (_fishes.Count > 0)
-            {
+        {          
                 Console.WriteLine("Введите номер рыбы которую хотите удалить:");
 
                 int number = Utilite.GetNumberInRange(1, _fishes.Count);
 
-                _fishes.Remove(_fishes[number - 1]);
-            }
-            else
-            {
-                Console.WriteLine("В аквариуме нет рыбок");
-            }
+                _fishes.Remove(_fishes[number - 1]);           
         }
 
         private void RemovedDeadFishes()
         {
-            for (int i = 0; i > _fishes.Count; i++)
+            for (int i = 0; i < _fishes.Count; i++)
             {
                 if (_fishes[i].IsDead())
                 {
@@ -137,13 +141,7 @@ namespace Aquarium
 
                     i--;
                 }
-                else
-                {
-                    Console.WriteLine($"Никто нре умер");
-                }
             }
-
-            Console.ReadKey();
         }
     }
 
