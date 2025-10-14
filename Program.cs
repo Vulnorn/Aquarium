@@ -15,15 +15,14 @@ namespace Aquarium
 
     public class Aquarium
     {
-        private AquariumFactory _factory = new AquariumFactory();
         private FishFactory _fishFactory = new FishFactory();
 
         private const int MaxFishes = 10;
-        private List<Fish> _fishes;
+        private List<Fish> _aquarium = new List<Fish>();
 
         public Aquarium()
         {
-            _fishes = _factory.GetList();
+            Create();
         }
 
         public void Work()
@@ -37,7 +36,7 @@ namespace Aquarium
             while (isOpen)
             {
                 Console.Clear();
-                Console.WriteLine($"В аквариуме: {_fishes.Count} рыбок");
+                Console.WriteLine($"В аквариуме: {_aquarium.Count} рыбок");
 
                 ShowFishes();
 
@@ -68,7 +67,6 @@ namespace Aquarium
 
                 isOpen = IsOpen();
 
-                Close(isOpen);
                 GrowOldFishes();
                 RemovedDeadFishes();
                 Close(isOpen);
@@ -76,84 +74,6 @@ namespace Aquarium
                 Console.ReadKey();
                 Console.Clear();
             }
-        }
-
-        private bool IsOpen()
-        {
-            return _fishes.Count > 1;
-        }
-
-        private void Close (bool isOpen)
-        {
-            if (isOpen == false)
-            {
-                Console.WriteLine($"В Аквариуме закончились рыбки");
-                return;
-            }
-        }
-
-        private void ShowFishes()
-        {
-            for (int i = 0; i < _fishes.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}) Рыба {_fishes[i].Name} - возраст: {_fishes[i].Age}");
-            }
-        }
-
-        private void GrowOldFishes()
-        {
-            foreach (Fish fish in _fishes)
-            {
-                fish.GrowOld();
-            }
-        }
-
-        private void AddFish()
-        {
-            if (_fishes.Count < MaxFishes)
-            {
-                _fishes.Add((_fishFactory.GetList()[Utilite.GenerateRandomNumber(0, _fishFactory.GetList().Count)].Clone()));
-                Console.WriteLine($"Была добавлена {_fishes[_fishes.Count-1].Name} рыба с возрастом {_fishes[_fishes.Count-1].Age}");
-            }
-
-            else
-                Console.WriteLine("В аквариуме нет места");
-        }
-
-        private void RemoveFish()
-        {          
-                Console.WriteLine("Введите номер рыбы которую хотите удалить:");
-
-                int number = Utilite.GetNumberInRange(1, _fishes.Count);
-
-                _fishes.Remove(_fishes[number - 1]);           
-        }
-
-        private void RemovedDeadFishes()
-        {
-            for (int i = 0; i < _fishes.Count; i++)
-            {
-                if (_fishes[i].IsDead())
-                {
-                    Console.WriteLine($"Удалена рыба {_fishes[i].Name}. Срок жизни был {_fishes[i].MaxLife}");
-
-                    _fishes.RemoveAt(i);
-
-                    i--;
-                }
-            }
-        }
-    }
-
-    public class AquariumFactory
-    {
-        private FishFactory _fishFactory = new FishFactory();
-
-        private List<Fish> _aquarium = new List<Fish>();
-      
-        public AquariumFactory()
-        {
-            Create();
         }
 
         private void Create()
@@ -164,9 +84,72 @@ namespace Aquarium
             }
         }
 
-        public List<Fish> GetList()
+        private bool IsOpen()
         {
-            return _aquarium;
+            return _aquarium.Count > 1;
+        }
+
+        private void Close(bool isOpen)
+        {
+            if (isOpen == false)
+            {
+                Console.WriteLine($"В Аквариуме закончились рыбки");
+               
+            }
+        }
+
+        private void ShowFishes()
+        {
+            for (int i = 0; i < _aquarium.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}) Рыба {_aquarium[i].Name} - возраст: {_aquarium[i].Age}");
+            }
+        }
+
+        private void GrowOldFishes()
+        {
+            foreach (Fish fish in _aquarium)
+            {
+                fish.GrowOld();
+            }
+        }
+
+        private void AddFish()
+        {
+            if (_aquarium.Count < MaxFishes)
+            {
+                _aquarium.Add((_fishFactory.GetList()[Utilite.GenerateRandomNumber(0, _fishFactory.GetList().Count)].Clone()));
+                Console.WriteLine($"Была добавлена {_aquarium[_aquarium.Count - 1].Name} рыба с возрастом {_aquarium[_aquarium.Count - 1].Age}");
+            }
+
+            else
+                Console.WriteLine("В аквариуме нет места");
+        }
+
+        private void RemoveFish()
+        {
+            Console.WriteLine("Введите номер рыбы которую хотите удалить:");
+
+            int number = Utilite.GetNumberInRange(1, _aquarium.Count);
+
+            Console.WriteLine($"Удалена рыба {_aquarium[number-1].Name}.");
+
+            _aquarium.RemoveAt(number-1);
+        }
+
+        private void RemovedDeadFishes()
+        {
+            for (int i = 0; i < _aquarium.Count; i++)
+            {
+                if (_aquarium[i].IsDead())
+                {
+                    Console.WriteLine($"Удалена рыба {_aquarium[i].Name}. Срок жизни был {_aquarium[i].MaxLife}");
+
+                    _aquarium.RemoveAt(i);
+
+                    i--;
+                }
+            }
         }
     }
 
@@ -190,7 +173,7 @@ namespace Aquarium
 
         public List<Fish> GetList()
         {
-            return _fish;
+            return new List<Fish>(_fish);
         }
 
         public int GetCount()
@@ -226,7 +209,7 @@ namespace Aquarium
 
         public bool IsDead()
         {
-            return Age>=MaxLife;
+            return Age >= MaxLife;
         }
     }
 
