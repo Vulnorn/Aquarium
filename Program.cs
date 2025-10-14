@@ -139,15 +139,13 @@ namespace Aquarium
 
         private void RemovedDeadFishes()
         {
-            for (int i = 0; i < _aquarium.Count; i++)
+            for (int i = _aquarium.Count; i > 0; i--)
             {
-                if (_aquarium[i].IsDead())
+                if (_aquarium[i-1].IsDead())
                 {
-                    Console.WriteLine($"Удалена рыба {_aquarium[i].Name}. Срок жизни был {_aquarium[i].MaxLife}");
+                    Console.WriteLine($"Удалена рыба {_aquarium[i-1].Name}. Срок жизни был {_aquarium[i-1].MaxLife}");
 
-                    _aquarium.RemoveAt(i);
-
-                    i--;
+                    _aquarium.RemoveAt(i - 1);
                 }
             }
         }
