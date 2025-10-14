@@ -65,10 +65,10 @@ namespace Aquarium
                         break;
                 }
 
-                isOpen = IsOpen();
-
                 GrowOldFishes();
                 RemovedDeadFishes();
+
+                isOpen = IsOpen();
                 Close(isOpen);
 
                 Console.ReadKey();
@@ -86,7 +86,7 @@ namespace Aquarium
 
         private bool IsOpen()
         {
-            return _aquarium.Count > 1;
+            return _aquarium.Count > 0;
         }
 
         private void Close(bool isOpen)
